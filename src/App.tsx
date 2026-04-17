@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, useNavigate, useLocation, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, useLocation, Link, useParams, Navigate } from 'react-router-dom';
 import { Menu, MessageCircle, Shield, Zap, Users, Facebook, Instagram, Youtube, Home as HomeIcon, ClipboardList, User, Heart, Eye, Edit2, Check, Lock } from 'lucide-react';
 import { collection, addDoc, onSnapshot, query, orderBy, updateDoc, doc, deleteDoc } from 'firebase/firestore';
 import { db } from './firebase';
@@ -51,15 +51,25 @@ const useSEO = (title: string, description: string) => {
 };
 
 function Home({ onSelectPackage }: { onSelectPackage: (pkg: any) => void }) {
-  useSEO(
-    "رقم 1 لزيادة المتابعين في مصر | سيرفر الأسد الذهبي SMM",
-    "احصل على تفاعل حقيقي، مشاهدات، ومتابعين إنستقرام، تيك توك، فيسبوك في مصر بأرخص الأسعار وسرعة فائقة بضمان عدم النقص."
-  );
-  const [selectedPlatform, setSelectedPlatform] = useState('tiktok');
-  const [selectedService, setSelectedService] = useState('followers');
+  const { platform = 'tiktok', service = 'followers' } = useParams();
+  const selectedPlatform = platform;
+  const selectedService = service;
 
   const currentPlatform = platforms.find(p => p.id === selectedPlatform) || platforms[2];
   const PlatformIcon = currentPlatform.icon;
+
+  const services = [
+    { id: 'followers', name: 'متابعين', icon: Users },
+    { id: 'likes', name: 'لايكات', icon: Heart },
+    { id: 'views', name: 'مشاهدات', icon: Eye },
+  ];
+  const currentService = services.find(s => s.id === selectedService) || services[0];
+  const ServiceIcon = currentService.icon;
+
+  useSEO(
+    `تزويد ${currentService.name} ${currentPlatform.name} في مصر | الأسد الذهبي SMM`,
+    `احصل على باقات تزويد ${currentService.name} ${currentPlatform.name} حقيقية في مصر بأرخص الأسعار وسرعة فائقة بضمان عدم النقص لدى سيرفر الأسد الذهبي.`
+  );
 
   const getDisplayPackages = () => {
     let baseAmount = 4000;
@@ -106,14 +116,6 @@ function Home({ onSelectPackage }: { onSelectPackage: (pkg: any) => void }) {
 
   const displayPackages = getDisplayPackages();
 
-  const services = [
-    { id: 'followers', name: 'متابعين', icon: Users },
-    { id: 'likes', name: 'لايكات', icon: Heart },
-    { id: 'views', name: 'مشاهدات', icon: Eye },
-  ];
-  const currentService = services.find(s => s.id === selectedService) || services[0];
-  const ServiceIcon = currentService.icon;
-
   return (
     <main className="max-w-md mx-auto p-4 pb-28">
       {/* SEO Keywords Intro & Trust Factors */}
@@ -139,9 +141,9 @@ function Home({ onSelectPackage }: { onSelectPackage: (pkg: any) => void }) {
           const isSelected = selectedPlatform === p.id;
           const Icon = p.icon;
           return (
-            <button
+            <Link
               key={p.id}
-              onClick={() => setSelectedPlatform(p.id)}
+              to={`/${p.id}/${selectedService}`}
               className={`flex flex-col items-center gap-2 p-2 rounded-2xl transition-all duration-300 flex-1 ${
                 isSelected ? 'ring-2 ring-[#ffb800] shadow-[0_0_20px_rgba(255,184,0,0.15)] bg-white/5 scale-105' : 'opacity-70 hover:opacity-100'
               }`}
@@ -151,7 +153,7 @@ function Home({ onSelectPackage }: { onSelectPackage: (pkg: any) => void }) {
                 <Icon className={`w-6 h-6 sm:w-7 sm:h-7 ${p.iconColor} relative z-10`} />
               </div>
               <span className={`text-[11px] sm:text-xs font-semibold whitespace-nowrap ${isSelected ? 'text-[#ffb800]' : 'text-gray-400'}`}>{p.name}</span>
-            </button>
+            </Link>
           );
         })}
       </div>
@@ -159,17 +161,17 @@ function Home({ onSelectPackage }: { onSelectPackage: (pkg: any) => void }) {
       {/* Services Sub-bar */}
       <div className="flex justify-center gap-1 sm:gap-2 mb-8 bg-[#1a1a24] p-1.5 rounded-2xl border border-gray-800 w-full max-w-[320px] mx-auto">
         {services.map(s => (
-          <button
+          <Link
             key={s.id}
-            onClick={() => setSelectedService(s.id)}
-            className={`flex-1 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+            to={`/${selectedPlatform}/${s.id}`}
+            className={`flex-1 py-2 rounded-xl text-center text-xs sm:text-sm font-bold transition-all block ${
               selectedService === s.id 
                 ? 'bg-[#ffb800] text-black shadow-md' 
                 : 'text-gray-400 hover:text-white'
             }`}
           >
             {s.name}
-          </button>
+          </Link>
         ))}
       </div>
 
@@ -811,7 +813,8 @@ function AppContent() {
       </header>
 
       <Routes>
-        <Route path="/" element={<Home onSelectPackage={handleSelectPackage} />} />
+        <Route path="/" element={<Navigate to="/tiktok/followers" replace />} />
+        <Route path="/:platform/:service" element={<Home onSelectPackage={handleSelectPackage} />} />
         <Route path="/checkout" element={<Checkout orderDraft={orderDraft} onConfirmOrder={handleConfirmOrder} />} />
         <Route path="/orders" element={<Orders orders={orders} />} />
         <Route path="/profile" element={<Profile />} />
