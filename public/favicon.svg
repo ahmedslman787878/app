@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE066" />
+      <stop offset="50%" stop-color="#FFB800" />
+      <stop offset="100%" stop-color="#CC9900" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="#0d0d12"/>
+  
+  <!-- SMM Text or Growth Bars -->
+  <!-- Bar 1 -->
+  <rect x="120" y="300" width="64" height="100" rx="20" fill="url(#gold)"/>
+  <!-- Bar 2 -->
+  <rect x="224" y="210" width="64" height="190" rx="20" fill="url(#gold)"/>
+  <!-- Bar 3 -->
+  <rect x="328" y="120" width="64" height="280" rx="20" fill="url(#gold)"/>
+  
+  <!-- Arrow -->
+  <path d="M120 250 L240 180 L320 220 L400 100" fill="none" stroke="white" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+  <circle cx="400" cy="100" r="16" fill="white" />
+</svg>

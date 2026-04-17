@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+
+# روابط خريطة الموقع
+Sitemap: https://ahmedslaman.netlify.app/sitemap.xml
