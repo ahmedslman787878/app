@@ -813,7 +813,7 @@ function AppContent() {
       </header>
 
       <Routes>
-        <Route path="/" element={<Navigate to="/tiktok/followers" replace />} />
+        <Route path="/" element={<Home onSelectPackage={handleSelectPackage} />} />
         <Route path="/:platform/:service" element={<Home onSelectPackage={handleSelectPackage} />} />
         <Route path="/checkout" element={<Checkout orderDraft={orderDraft} onConfirmOrder={handleConfirmOrder} />} />
         <Route path="/orders" element={<Orders orders={orders} />} />
