@@ -451,7 +451,17 @@ function Checkout({ orderDraft, onConfirmOrder }: { orderDraft: any, onConfirmOr
                   {copied ? 'تم النسخ' : 'نسخ'}
                 </button>
               </div>
-              <p className="text-emerald-500 text-xs font-bold">فودافون كاش / اتصالات كاش / وي باي</p>
+              <p className="text-emerald-500 text-xs font-bold mb-4">فودافون كاش / اتصالات كاش / وي باي</p>
+
+              <a 
+                href="https://wa.me/201080379299" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="flex items-center justify-center gap-2 w-full bg-green-600/20 hover:bg-green-600/30 border border-green-500/50 text-green-400 font-bold py-2.5 px-4 rounded-lg transition-colors text-xs"
+              >
+                <MessageCircle size={16} />
+                في حالة الإيداع من خارج مصر يرجى الضغط هنا
+              </a>
             </div>
             
             <div>
