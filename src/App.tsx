@@ -58,11 +58,14 @@ function Home({ onSelectPackage }: { onSelectPackage: (pkg: any) => void }) {
   const currentPlatform = platforms.find(p => p.id === selectedPlatform) || platforms[2];
   const PlatformIcon = currentPlatform.icon;
 
-  const services = [
+  const rawServices = [
     { id: 'followers', name: 'متابعين', icon: Users },
     { id: 'likes', name: 'لايكات', icon: Heart },
     { id: 'views', name: 'مشاهدات', icon: Eye },
+    { id: 'watchtime', name: 'ساعات', icon: Clock },
   ];
+  
+  const services = selectedPlatform === 'youtube' ? rawServices : rawServices.filter(s => s.id !== 'watchtime');
   const currentService = services.find(s => s.id === selectedService) || services[0];
   const ServiceIcon = currentService.icon;
 
@@ -101,6 +104,9 @@ function Home({ onSelectPackage }: { onSelectPackage: (pkg: any) => void }) {
       } else if (selectedService === 'views') {
         baseAmount = 2000;
         basePrice = 200;
+      } else if (selectedService === 'watchtime') {
+        baseAmount = 2000;
+        basePrice = 400;
       }
     }
 
@@ -143,7 +149,7 @@ function Home({ onSelectPackage }: { onSelectPackage: (pkg: any) => void }) {
           return (
             <Link
               key={p.id}
-              to={`/${p.id}/${selectedService}`}
+              to={`/${p.id}/${selectedService === 'watchtime' && p.id !== 'youtube' ? 'followers' : selectedService}`}
               className={`flex flex-col items-center gap-2 p-2 rounded-2xl transition-all duration-300 flex-1 ${
                 isSelected ? 'ring-2 ring-[#ffb800] shadow-[0_0_20px_rgba(255,184,0,0.15)] bg-white/5 scale-105' : 'opacity-70 hover:opacity-100'
               }`}
@@ -159,17 +165,18 @@ function Home({ onSelectPackage }: { onSelectPackage: (pkg: any) => void }) {
       </div>
 
       {/* Services Sub-bar */}
-      <div className="flex justify-center gap-1 sm:gap-2 mb-8 bg-[#1a1a24] p-1.5 rounded-2xl border border-gray-800 w-full max-w-[320px] mx-auto">
+      <div className={`flex justify-center gap-1 sm:gap-2 mb-8 bg-[#1a1a24] p-1.5 rounded-2xl border border-gray-800 w-full mx-auto ${selectedPlatform === 'youtube' ? 'max-w-full' : 'max-w-[320px]'}`}>
         {services.map(s => (
           <Link
             key={s.id}
             to={`/${selectedPlatform}/${s.id}`}
-            className={`flex-1 py-2 rounded-xl text-center text-xs sm:text-sm font-bold transition-all block ${
+            className={`flex-1 py-2 rounded-xl text-center text-xs sm:text-sm font-bold transition-all block ${selectedPlatform === 'youtube' ? 'px-1 text-[10px] sm:text-xs min-w-0 flex items-center justify-center gap-1' : ''} ${
               selectedService === s.id 
                 ? 'bg-[#ffb800] text-black shadow-md' 
                 : 'text-gray-400 hover:text-white'
             }`}
           >
+            {selectedPlatform === 'youtube' && <s.icon className={`w-3.5 h-3.5 ${selectedService === s.id ? 'text-black' : 'text-gray-400'}`} />}
             {s.name}
           </Link>
         ))}
@@ -457,10 +464,10 @@ function Checkout({ orderDraft, onConfirmOrder }: { orderDraft: any, onConfirmOr
                 href="https://wa.me/201080379299" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="flex items-center justify-center gap-2 w-full bg-green-600/20 hover:bg-green-600/30 border border-green-500/50 text-green-400 font-bold py-2.5 px-4 rounded-lg transition-colors text-xs"
+                className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-[#25D366] to-[#128C7E] hover:from-[#20bd5c] hover:to-[#0f7a6e] text-white shadow-[0_0_15px_rgba(37,211,102,0.4)] font-bold py-3 px-4 rounded-xl transition-all transform hover:scale-[1.02] active:scale-95 text-sm mt-2"
               >
-                <MessageCircle size={16} />
-                في حالة الإيداع من خارج مصر يرجى الضغط هنا
+                <MessageCircle size={20} className="animate-pulse drop-shadow-md" />
+                للإيداع من خارج مصر (اضغط هنا)
               </a>
             </div>
             
